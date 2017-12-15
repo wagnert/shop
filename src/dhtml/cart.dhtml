@@ -1,0 +1,146 @@
+<?php
+
+/**
+ * dhtml\cart.phtml
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+
+namespace AppserverIo\Apps\Example\Servlets;
+
+use AppserverIo\Apps\Example\Utils\ViewHelper;
+use AppserverIo\Apps\Example\Utils\RequestKeys;
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="appserver.io">
+
+    <title>appserver.io example</title>
+
+    <base href="<?php echo ViewHelper::singleton()->getBaseUrl($servletRequest) ?>">
+
+    <link href="components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <link href="static/img/favicon.png" rel="shortcut icon">
+</head>
+
+<body>
+
+    <?php require_once 'elements/navigation.phtml' ?>
+
+    <div class="container content">
+
+        <?php if ($errorMessages = $servletRequest->getAttribute(RequestKeys::ERROR_MESSAGES)): ?>
+            <div class="alert alert-danger">
+                <?php foreach ($errorMessages as $errorMessage): ?>
+                    <?php echo $errorMessage ?><br/>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <a href="http://appserver.io">
+            <img src="static/img/logo-black.png"/>
+        </a>
+
+        <br/>
+
+        <h1>Cart</h1>
+
+        <br/>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-10 col-md-offset-1">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Total</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($servletRequest->getAttribute(RequestKeys::OVERVIEW_DATA) as $entity): ?>
+                        <tr>
+                            <td class="col-md-6">
+                            <div class="media">
+                                <a class="pull-left" href="#"> <img class="media-object" src="http://lorempixel.com/70/70/technics/<?php echo $entity->getProductId() ?>"> </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading"><a href="#"><?php echo $entity->getProduct()->getName() ?></a></h4>
+                                    <h5 class="media-heading"><?php echo $entity->getProduct()->getDescription() ?></h5>
+                                    <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
+                                </div>
+                            </div></td>
+                            <td class="col-md-1" style="text-align: center">
+                            <input type="email" class="form-control" id="exampleInputEmail1" value="1">
+                            </td>
+                            <td class="col-md-1 text-center"><strong>$<?php echo $entity->getProduct()->getSalesPrice() ?></strong></td>
+                            <td class="col-md-1 text-center"><strong>$<?php echo $entity->getProduct()->getSalesPrice() ?></strong></td>
+                            <td class="col-md-1">
+                            <a href="<?php echo ViewHelper::singleton()->getDeleteCartItemLink($entity) ?>" type="button" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </a></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td>   </td>
+                            <td><h5>Subtotal</h5></td>
+                            <td class="text-right"><h5><strong>$xx.xx</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td>   </td>
+                            <td><h5>Estimated shipping</h5></td>
+                            <td class="text-right"><h5><strong>$xx.xxx</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td>   </td>
+                            <td><h3>Total</h3></td>
+                            <td class="text-right"><h3><strong>$xx.xx</strong></h3></td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td>   </td>
+                            <td>
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                            </button></td>
+                            <td>
+                            <button type="button" class="btn btn-success">
+                                Checkout <span class="glyphicon glyphicon-play"></span>
+                            </button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; and built with pride by <a href="http://appserver.io" target="_blank">appserver.io</a></p>
+        </div>
+
+    </div>
+
+<!-- placed at the end of the document so the pages load faster -->
+<script src="components/jquery/jquery.min.js"></script>
+<script src="components/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

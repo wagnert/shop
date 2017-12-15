@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<containers xmlns="http://www.appserver.io/appserver">
+    <container name="${container.name}">
+        <servers>
+            <server name="http*">
+                <virtualHosts>
+                    <!-- an example for a virtual host configuration -->
+                    <virtualHost name="${webapp.name}.dev www.${webapp.name}.dev">
+                        <params>
+                            <param name="admin" type="string">info@appserver.io</param>
+                            <param name="directoryIndex" type="string">pm.pdf</param>
+                            <param name="documentRoot" type="string">${host.appBase.dir}/${webapp.name}</param>
+                        </params>
+                        <rewrites>
+                            <rewrite condition="-d{OR}-f{OR}-l" target="" flag="L" />
+                        </rewrites>
+                        <accesses>
+                            <access type="allow">
+                                <params>
+                                    <param name="X_REQUEST_URI" type="string">^.*</param>
+                                </params>
+                            </access>
+                        </accesses>
+                        <!-- an example for basic or digest auth for the server -->
+                        <authentications>
+                            <authentication uri="^\/dhtml\/basic.dhtml.*">
+                                <params>
+                                    <param name="type" type="string">\AppserverIo\Http\Authentication\BasicAuthentication</param>
+                                    <param name="realm" type="string">PhpWebServer Basic Authentication System</param>
+                                    <param name="file" type="string">${host.appBase.dir}/${webapp.name}/WEB-INF/htpasswd</param>
+                                </params>
+                            </authentication>
+                            <authentication uri="^\/dhtml\/digest.dhtml.*">
+                                <params>
+                                    <param name="type" type="string">\AppserverIo\Http\Authentication\DigestAuthentication</param>
+                                    <param name="realm" type="string">Digest-Example-Realm</param>
+                                    <param name="adapter-type" type="string">htdigest</param>
+                                    <param name="file" type="string">${host.appBase.dir}/${webapp.name}/WEB-INF/htdigest</param>
+                                </params>
+                            </authentication>
+                        </authentications>
+                        <!-- an example how to modify response headers -->
+                        <headers>
+                            <header type="response" name="Server" value="My Own Server" override="true"/>
+                            <header type="response" name="X-Powered-By" value="${webapp.name}.dev"/>
+                        </headers>
+                        <!-- an example to activate the auto index functionality on a custom directory -->
+                        <locations>
+                            <location condition="^\/static\/.*">
+                                <headers>
+                                    <header type="response" name="X-Powered-By" value="autoIndex" append="true"/>
+                                </headers>
+                                <params>
+                                    <param name="autoIndex" type="boolean">true</param>
+                                </params>
+                            </location>
+                        </locations>
+                        <environmentVariables>
+                            <environmentVariable condition="" definition="LOGGER_ACCESS=${container.name}/${webapp.name}/Access" />
+                        </environmentVariables>
+                    </virtualHost>
+                </virtualHosts>
+                <accesses>
+                    <access type="allow">
+                        <params>
+                            <param name="X_REQUEST_URI" type="string">^\/${webapp.name}\/.*</param>
+                        </params>
+                    </access>
+                </accesses>
+                <environmentVariables>
+                    <environmentVariable condition="^\/${webapp.name}@$X_REQUEST_URI" definition="LOGGER_ACCESS=${container.name}/${webapp.name}/Access" />
+                </environmentVariables>
+            </server>
+        </servers>
+    </container>
+</containers>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provision xmlns="http://www.appserver.io/appserver">
+
+    <datasource name="appserver.io-example-application"/>
+
+    <installation>
+        <steps>
+            <step type="AppserverIo\Apps\Example\Provisioning\PrepareDatabaseStep" />
+            <!--
+            <step type="AppserverIo\Apps\Example\Provisioning\DropSpecificDatabaseStep">
+                <params>
+                    <param name="pathToEntities" type="string">common/classes/AppserverIo/Apps/Example/Entities</param>
+                </params>
+            </step>
+            <step type="AppserverIo\Apps\Example\Provisioning\CreateSpecificDatabaseStep">
+                <params>
+                    <param name="pathToEntities" type="string">common/classes/AppserverIo/Apps/Example/Entities</param>
+                </params>
+            </step>
+            -->
+        </steps>
+    </installation>
+
+</provision>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context 
+    name="routlt"
+    type="AppserverIo\Appserver\Application\Application"
+    xmlns="http://www.appserver.io/appserver">
+
+    <loggers>
+        <logger channelName="system" name="System" type="\AppserverIo\Logger\Logger">
+            <handlers>
+                <handler type="\AppserverIo\Logger\Handlers\CustomFileHandler">
+                    <formatter type="\AppserverIo\Logger\Formatters\StandardFormatter"/>
+                    <params>
+                        <param name="logFile" type="string">php://stderr</param>
+                        <param name="logLevel" type="string">info</param>
+                    </params>
+                </handler>
+            </handlers>
+        </logger>
+        <logger channelName="access" name="Access" type="\AppserverIo\Logger\Logger">
+            <handlers>
+                <handler type="\AppserverIo\Logger\Handlers\CustomFileHandler">
+                    <formatter type="\AppserverIo\Logger\Formatters\StandardFormatter">
+                        <params>
+                            <param name="format" type="string">%4$s</param>
+                        </params>
+                    </formatter>
+                    <params>
+                        <param name="logFile" type="string">php://stderr</param>
+                        <param name="logLevel" type="string">info</param>
+                    </params>
+                </handler>
+            </handlers>
+        </logger>
+    </loggers>
+
+    <managers>
+        <manager
+            name="ObjectManagerInterface"
+            type="AppserverIo\Appserver\DependencyInjectionContainer\ObjectManager"
+            factory="AppserverIo\Appserver\DependencyInjectionContainer\ObjectManagerFactory">
+            <descriptors>
+                <descriptor>AppserverIo\Description\ServletDescriptor</descriptor>
+                <descriptor>AppserverIo\Description\MessageDrivenBeanDescriptor</descriptor>
+                <descriptor>AppserverIo\Description\StatefulSessionBeanDescriptor</descriptor>
+                <descriptor>AppserverIo\Description\SingletonSessionBeanDescriptor</descriptor>
+                <descriptor>AppserverIo\Description\StatelessSessionBeanDescriptor</descriptor>
+                <descriptor>AppserverIo\Routlt\Description\PathDescriptor</descriptor>
+            </descriptors>
+        </manager>
+        <manager name="AuthenticationManagerInterface" type="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManager" factory="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManagerFactory">
+            <securityDomains>
+                <securityDomain name="example-realm">
+                    <authConfig>
+                        <loginModules>
+                            <loginModule type="AppserverIo\Appserver\ServletEngine\Security\Auth\Spi\LdapLoginModule" flag="required">
+                                <params>
+                                    <param name="hashAlgorithm" type="string">null</param>
+                                    <param name="url" type="string">openldap</param>
+                                    <param name="port" type="string">389</param>
+
+                                    <param name="baseDN" type="string">dc=example,dc=org</param>
+                                    <param name="bindDN" type="string">cn=admin,dc=example,dc=org</param>
+                                    <param name="bindCredential" type="string">admin</param>
+                                    <param name="baseFilter" type="string">(&amp;(objectClass=person)(uid={0}))</param>
+
+                                    <param name="rolesDN" type="string">dc=example,dc=org</param>
+                                    <param name="roleFilter" type="string">memberUid={0}</param>
+                                    <param name="allowEmptyPasswords" type="string">false</param>
+                                </params>
+                            </loginModule>
+                        </loginModules>
+                    </authConfig>
+                </securityDomain>
+            </securityDomains>
+        </manager>
+    </managers>
+
+</context>
